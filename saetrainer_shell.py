@@ -36,8 +36,10 @@ def run():
             num_domains=checkpoint["model_num_domains"],
             num_classes=checkpoint["model_num_classes"]
         )
-            
-        train_pacs_SAEs(backbone, r"./oracle_saes", name, rearrange_string='n w h c -> (n w h) c')    
+        if backbone_name == "ResNet50":
+            train_pacs_SAEs(backbone, r"./oracle_saes", name, rearrange_string='n w h c -> (n w h) c')    
+        else:
+            train_pacs_SAEs(backbone, r"./oracle_saes", name, rearrange_string='n t d -> (n t) d')
         break
 
 if __name__ == "__main__":
