@@ -15,8 +15,7 @@ torch.cuda.empty_cache()
 base_dir = "./oracle_selection_models"
 algo_classes = {"DANN": DANN, "CORAL": CORAL, "Mixup": Mixup, "MMD": MMD, "IRM": IRM, "ERM": ERM, "SagNet": SagNet}
 
-
-if __name__ == "__main__":
+def run():
     for name in os.listdir(base_dir):
 
         if f"SAE_{name}.pt" in os.listdir(r"./oracle_saes"):
@@ -40,3 +39,6 @@ if __name__ == "__main__":
             
         train_pacs_SAEs(backbone, r"./oracle_saes", name)    
         break
+
+if __name__ == "__main__":
+    run()
