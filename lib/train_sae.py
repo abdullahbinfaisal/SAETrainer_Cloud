@@ -39,8 +39,8 @@ def extract_features(backbone, images):
             elif backbone.featurizer.__class__.__name__ == "ViT":
                 activations = backbone.featurizer.network.forward_features(images.to(device))[:, 1:, :]
             else:
-                activations = backbone.featurizer(images.to(device))
-
+                activations = backbone.featurizer.network(images.to(device))
+               
         if hasattr(backbone, 'forward_features'): # for models directly from the overcomplete library
             activations = backbone.forward_features(images.to(device))
 
@@ -74,7 +74,7 @@ def train_pacs_SAEs(backbone, save_path, name, rearrange_string='n t d -> (n t) 
     print(f"test envs: {test_envs}")
     print(f"train envs: {trainenvs}")
     
-    sae = TopKSAE(768, nb_concepts=768*10, top_k=64, device="cuda",)
+    sae = TopKSAE(2048, nb_concepts=768*10, top_k=64, device="cuda",)
     sae.train()
 
 
@@ -100,8 +100,13 @@ def train_pacs_SAEs(backbone, save_path, name, rearrange_string='n t d -> (n t) 
         for i, (images, _) in enumerate(domain_train_loader):
             
             activations = extract_features(backbone, images) # Forward Pass
+            #print(activations.shape)
             activations = normal.run(activations) # Normalize
+            activations = activations.permute(0, 2, 3, 1) ### FOR RESNET ONLY
             activations = rearrange(activations, rearrange_string) # Rearrange
+            #print(activations.shape)
+            
+
 
             optimizer.zero_grad()
             z_pre, z = sae.encode(activations)

@@ -37,7 +37,7 @@ def run():
             num_classes=checkpoint["model_num_classes"]
         )
             
-        train_pacs_SAEs(backbone, r"./oracle_saes", name)    
+        train_pacs_SAEs(backbone, r"./oracle_saes", name, rearrange_string='n w h c -> (n w h) c')    
         break
 
 if __name__ == "__main__":
