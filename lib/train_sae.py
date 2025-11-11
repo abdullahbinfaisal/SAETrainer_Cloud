@@ -5,6 +5,7 @@ import torch.nn as nn
 from einops import rearrange
 from overcomplete.sae import TopKSAE
 from lib.gpu_pacs import get_pacs_gpuloader
+from lib.data_handlers import Load_PACS
 from torch.optim.lr_scheduler import SequentialLR, LinearLR, CosineAnnealingLR
 import time
 
@@ -69,7 +70,8 @@ def train_pacs_SAEs(backbone, save_path, name, rearrange_string='n t d -> (n t) 
 
     trainenvs = envs[test_envs]
     t1, t2 = trainenvs 
-    domain_train_loader = get_pacs_gpuloader(domains=[domains[t1], domains[t2]], batch_size=256, drop_last=True)
+    #domain_train_loader = get_pacs_gpuloader(domains=[domains[t1], domains[t2]], batch_size=256, drop_last=True)
+    domain_train_loader = Load_PACS(domains=[domains[t1], domains[t2]], batch_size=256, drop_last=True)
 
     print(f"test envs: {test_envs}")
     print(f"train envs: {trainenvs}")
